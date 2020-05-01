@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>On time!</title>
+    </head>
+    <body>
+        <div id="total-time">
+            <br><input type="number" id="hours" placeholder="Horas">
+            <br><input type="number" id="minutes" placeholder="Minutos">
+            <br><input type="number" id="seconds" placeholder="Segundos">  
+        </div>
+        <button id="time-button">Set time</button>
+        <p id="time-left"></p>
+    </body>
+    <script>
+        var ourButton = document.getElementById("time-button");
+        ourButton.addEventListener("click", getTime);
+        function getTime() {
+            var hours = document.getElementById("hours").value;
+            var minutes = document.getElementById("minutes").value;
+            var seconds = document.getElementById("seconds").value;
+            var leftTime = hours*3600 + minutes*60 + seconds;
+            var timePar = document.getElementById("time-left");
+            var intervalo = setInterval(
+                function() {
+                    var horas = (leftTime - leftTime % 3600)/3600;
+                    var minutos = (leftTime % 3600 - (leftTime%3600) % 60)/60;
+                    var segundos = (leftTime % 3600) % 60
+                    var resultado = `${horas} : ${minutos} : ${segundos}`; 
+                    timePar.innerText = resultado;
+                    if (leftTime == 0) clearInterval(intervalo);
+                    leftTime -= 1;
+                }
+            , 1000);
+        }
+    </script>
+</html>
