@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>On time!</title>
+    </head>
+    <body>
+        <div id="total-time">
+            <br><input type="number" id="hours" placeholder="Hours">
+            <br><input type="number" id="minutes" placeholder="Minutes">
+            <br><input type="number" id="seconds" placeholder="Seconds">  
+        </div>
+        <button id="time-button">Set time</button>
+        <button id="stop-button" hidden></button>
+        <button id="reset-button" hidden></button>
+        <p id="time-left"></p>
+    </body>
+    <script>
+        var ourButton = document.getElementById("time-button");
+        var stopButton = document.getElementById("stop-button");
+        var resetButton = document.getElementById("reset-button");
+        var timePar = document.getElementById("time-left");
+        var inputHours = document.getElementById("hours");
+        var inputMinutes = document.getElementById("minutes");
+        var inputSeconds = document.getElementById("seconds");
+        
+        ourButton.addEventListener("click", getTime);
+        function getTime() {
+            stopButton.innerText = "Stop";
+            stopButton.removeAttribute("hidden");
+            stopButton.addEventListener("click", () => {
+                stopFunction(interval, leftTime);
+            });
+            resetButton.innerText = "Reset";
+            resetButton.removeAttribute("hidden");
+            resetButton.addEventListener("click", () => {
+                clear(interval);
+                ourButton.innerText = "Set Time";
+                timePar.innerText = "";
+            });
+            var leftTime = getTimeLeft();
+            var interval = setInterval(
+                function() {
+                    timeConverted = getTimeLeftConverted(leftTime); 
+                    timePar.innerText = timeConverted;
+                    if (leftTime == 0) {
+                        clear(interval);                       
+                    }
+                    leftTime -= 1;
+                }
+            , 1000);
+        }
+        function getTimeLeft() {
+            var hours = inputHours.value;
+            var minutes = inputMinutes.value;
+            var seconds = inputSeconds.value;
+            var result = hours*3600 + minutes*60 + seconds*1;
+            return result;
+        }
+
+        function getTimeLeftConverted(time) {
+            var hours = (time - time % 3600)/3600;
+            var minutes = (time % 3600 - (time%3600) % 60)/60;
+            var seconds = (time % 3600) % 60
+            var result = `${hours} : ${minutes} : ${seconds}`;
+            return result;
+        }
+
+        function getHoursConverted(time) {
+            return (time - time % 3600)/3600;
+        }
+
+        function getMinutesConverted(time) {
+            return (time % 3600 - (time%3600) % 60)/60;
+        }
+
+        function getSecondsConverted(time) {
+            return (time % 3600) % 60;
+        }
+
+        function clear(someInterval) {
+            clearInterval(someInterval);
+            inputHours.value = '';
+            inputMinutes.value = '';
+            inputSeconds.value = ''; 
+        }
+
+        function stopFunction(someInterval, time) {
+            ourButton.innerText = "Resume";
+            clearInterval(someInterval);
+            inputHours.value = getHoursConverted(time);
+            inputMinutes.value = getMinutesConverted(time);
+            inputSeconds.value = getSecondsConverted(time);
+        }
+
+    </script>
+</html>
